@@ -78,6 +78,11 @@
       border: 1px solid #00f0ff;
       color: #00f0ff;
     }
+    .milkdrop-btn {
+      background: #3e2338;
+      border: 1px solid #ff00ea;
+      color: #ff80f4;
+    }
 
     /* Меню скинов */
     #skin-menu {
@@ -189,7 +194,7 @@
 <body>
 
   <!-- Верхняя плашка -->
-  <div id="top-bar">
+  <div id=\"top-bar\">
     <div class="top-title">
       ★ Создал Дмитрий для «РасПаковка ДваПаковка» ★
     </div>
@@ -203,6 +208,9 @@
       <button class="channel-link skin-picker-btn" onclick="toggleSkinMenu()">
         🎨 Скины
       </button>
+      <button class="channel-link milkdrop-btn" onclick="toggleMilkdrop()">
+        ✨ Milkdrop
+      </button>
     </div>
   </div>
 
@@ -212,6 +220,7 @@
       <span>Выберите скин:</span>
       <span id="skin-menu-close" onclick="toggleSkinMenu()">✕</span>
     </div>
+    <div class="skin-item" onclick="changeSkin('skins/Winamp5_Classified.wsz')" style="font-weight:bold; color:#000080;">★ Winamp 5 Classified (v5.5)</div>
     <div class="skin-item" onclick="changeSkin('')">Classic 2.91 (Original Default)</div>
     <div class="skin-item" onclick="changeSkin('skins/Matrix.wsz')">Matrix Neon (The Matrix Code)</div>
     <div class="skin-item" onclick="changeSkin('skins/Goldam.wsz')">Goldam (Luxury Gold Metal)</div>
@@ -236,6 +245,10 @@
     <div class="systray" id="clock">12:00</div>
   </div>
 
+  <script src="js/butterchurn.min.js"></script>
+  <script src="js/butterchurnPresets.min.js"></script>
+  <script src="webamp.bundle.min.js"></script>
+
   <script>
     // Подавляем системные alert-окна Webamp
     const _origAlert = window.alert;
@@ -255,6 +268,12 @@
       menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
 
+    function toggleMilkdrop() {
+      if (webampInstance) {
+        webampInstance.store.dispatch({ type: "TOGGLE_WINDOW", windowId: "milkdrop" });
+      }
+    }
+
     function updateClock() {
       const now = new Date();
       document.getElementById('clock').textContent = 
@@ -263,10 +282,7 @@
     }
     setInterval(updateClock, 1000);
     updateClock();
-  </script>
 
-  <script src="webamp.bundle.min.js"></script>
-  <script>
     let webampInstance = null;
 
     function changeSkin(url) {
@@ -280,6 +296,7 @@
       }
     }
 
+    // Инициализация Webamp с поддержкой Butterchurn (Milkdrop WebGL)
     const webamp = new Webamp({
       initialTracks: [
         {
@@ -299,7 +316,11 @@
           duration: 8
         }
       ],
+      initialSkin: {
+        url: "skins/Winamp5_Classified.wsz"
+      },
       availableSkins: [
+        { url: "skins/Winamp5_Classified.wsz", name: "Winamp 5 Classified" },
         { url: "skins/Matrix.wsz", name: "Matrix" },
         { url: "skins/Goldam.wsz", name: "Goldam" },
         { url: "skins/Ectoplasm.wsz", name: "Ectoplasm" },
@@ -309,6 +330,17 @@
         { url: "skins/Cyrus-XMMS.wsz", name: "Cyrus XMMS" },
         { url: "skins/Girl_comma_Interrupted.wsz", name: "Girl Interrupted" }
       ],
+      __butterchurnOptions: {
+        importButterchurn: async () => window.butterchurn,
+        getPresets: async () => {
+          const presets = window.butterchurnPresets.getPresets();
+          return Object.keys(presets).map((name) => ({
+            name,
+            preset: presets[name]
+          }));
+        },
+        butterchurnOpen: false
+      },
       zIndex: 10000
     });
 
@@ -317,20 +349,20 @@
     webamp.renderWhenReady(document.getElementById('app')).then(() => {
       console.log("Webamp готов!");
 
-      // Функция выравнивания: ровно по центру экрана и ОПУСКАЕМ ниже плашки
+      // Центрирование окон строго по центру и ниже плашки
       function setCleanLayout() {
         const topBar = document.getElementById('top-bar');
-        const startY = topBar ? topBar.offsetHeight + 18 : 68; // опускаем ниже плашки
+        const startY = topBar ? topBar.offsetHeight + 18 : 68;
         const screenW = window.innerWidth;
-        const centerX = Math.max(0, Math.floor((screenW - 275) / 2)); // ровно по центру экрана
+        const centerX = Math.max(0, Math.floor((screenW - 275) / 2));
 
-        // Устанавливаем координаты окон в штатном хранилище Webamp
         webamp.store.dispatch({
           type: "UPDATE_WINDOW_POSITIONS",
           positions: {
             main: { x: centerX, y: startY },
             equalizer: { x: centerX, y: startY + 116 },
-            playlist: { x: centerX, y: startY + 232 }
+            playlist: { x: centerX, y: startY + 232 },
+            milkdrop: { x: Math.max(0, centerX - 10), y: startY }
           },
           absolute: true
         });
