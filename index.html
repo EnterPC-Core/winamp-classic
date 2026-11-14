@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Winamp - Создал Дмитрий для подписчиков Распаковка Двапаковка</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #008080; /* Классический рабочий стол Windows 98 / 2000 */
+      font-family: "MS Sans Serif", Tahoma, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #desktop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 34px;
+      overflow: hidden;
+    }
+    #taskbar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 34px;
+      background: #c0c0c0;
+      border-top: 2px solid #ffffff;
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      gap: 6px;
+      z-index: 99999;
+    }
+    .start-btn {
+      height: 26px;
+      padding: 0 10px;
+      background: #c0c0c0;
+      border-top: 2px solid #fff;
+      border-left: 2px solid #fff;
+      border-right: 2px solid #404040;
+      border-bottom: 2px solid #404040;
+      font-weight: bold;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .start-btn:active {
+      border-top: 2px solid #404040;
+      border-left: 2px solid #404040;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+    }
+    .task-badge {
+      flex: 1;
+      height: 24px;
+      background: #c0c0c0;
+      border-top: 1px solid #404040;
+      border-left: 1px solid #404040;
+      border-right: 1px solid #fff;
+      border-bottom: 1px solid #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-size: 12px;
+      color: #000;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .systray {
+      height: 24px;
+      padding: 0 8px;
+      border-top: 1px solid #808080;
+      border-left: 1px solid #808080;
+      border-right: 1px solid #fff;
+      border-bottom: 1px solid #fff;
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: #000;
+    }
+    /* Плашка автора вверху стола */
+    #branding-banner {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid #00ffff;
+      border-radius: 6px;
+      padding: 6px 14px;
+      color: #fff;
+      font-size: 12px;
+      text-align: center;
+      z-index: 1000;
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    #branding-banner b {
+      color: #ffaa00;
+    }
+    #branding-banner span {
+      color: #00e5ff;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="branding-banner">
+    ★ Создал <b>Дмитрий</b> специально для подписчиков <span>«Распаковка Двапаковка»</span> ★
+  </div>
+
+  <div id="desktop">
+    <div id="app"></div>
+  </div>
+
+  <div id="taskbar">
+    <div class="start-btn" onclick="alert('Winamp v2.91\\nСоздал Дмитрий специально для подписчиков Распаковка Двапаковка!')">
+      <span style="color:#000080;">⊞</span> Пуск
+    </div>
+    <div class="task-badge">
+      ⚡ Winamp - Создал Дмитрий [Распаковка Двапаковка]
+    </div>
+    <div class="systray" id="clock">12:00</div>
+  </div>
+
+  <script src="webamp.bundle.min.js"></script>
+  <script>
+    // Часы на панели задач
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').textContent = 
+        now.getHours().toString().padStart(2, '0') + ':' + 
+        now.getMinutes().toString().padStart(2, '0');
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Инициализация полноценного Webamp (настоящий Windows Winamp)
+    const webamp = new Webamp({
+      initialTracks: [
+        {
+          metaData: {
+            artist: "Дмитрий (Распаковка Двапаковка)",
+            title: "Winamp Retro Intro (Special Edition)"
+          },
+          url: "dmitry_intro.mp3",
+          duration: 8
+        }
+      ],
+      zIndex: 10000
+    });
+
+    webamp.renderWhenReady(document.getElementById('app')).then(() => {
+      console.log("Webamp готов к работе!");
+      
+      // Авто-запуск для воспроизведения авторского интро
+      setTimeout(() => {
+        webamp.play();
+      }, 800);
+    });
+  </script>
+</body>
+</html>
