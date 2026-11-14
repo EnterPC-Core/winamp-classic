@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Winamp - Создал Дмитрий для подписчиков Распаковка Двапаковка</title>
+  <title>Winamp - РасПаковка ДваПаковка | Дмитрий</title>
   <style>
     * {
       box-sizing: border-box;
@@ -14,8 +14,8 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #008080; /* Классический рабочий стол Windows 98 / 2000 */
-      font-family: "MS Sans Serif", Tahoma, sans-serif;
+      background: #008080; /* Классический фон Windows 98 / 2000 */
+      font-family: "MS Sans Serif", Tahoma, -apple-system, sans-serif;
       user-select: none;
       -webkit-user-select: none;
     }
@@ -24,15 +24,114 @@
       top: 0;
       left: 0;
       right: 0;
-      bottom: 34px;
+      bottom: 36px;
       overflow: hidden;
     }
+
+    /* Верхняя панель брендинга и ссылок */
+    #top-bar {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(18, 22, 32, 0.92);
+      border: 1px solid #00f0ff;
+      border-radius: 8px;
+      padding: 8px 18px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      z-index: 100000;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      max-width: 95vw;
+    }
+    .top-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #ffd700;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+    .top-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .channel-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: bold;
+      color: #fff;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .channel-link:active {
+      transform: scale(0.96);
+    }
+    .yt-link {
+      background: #e62117;
+      border: 1px solid #ff4d4d;
+    }
+    .vk-link {
+      background: #0077ff;
+      border: 1px solid #3399ff;
+    }
+    .skin-picker-btn {
+      background: #222738;
+      border: 1px solid #00f0ff;
+      color: #00f0ff;
+      cursor: pointer;
+    }
+
+    /* Селектор скинов выпадающий */
+    #skin-menu {
+      display: none;
+      position: absolute;
+      top: 85px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #c0c0c0;
+      border: 2px outset #ffffff;
+      padding: 6px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.6);
+      z-index: 100001;
+      width: 260px;
+    }
+    #skin-menu h4 {
+      font-size: 12px;
+      padding: 4px;
+      background: #000080;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .skin-item {
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      color: #000;
+      display: flex;
+      justify-content: space-between;
+    }
+    .skin-item:hover, .skin-item:active {
+      background: #000080;
+      color: #fff;
+    }
+
+    /* Нижняя панель задач */
     #taskbar {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 34px;
+      height: 36px;
       background: #c0c0c0;
       border-top: 2px solid #ffffff;
       display: flex;
@@ -42,7 +141,7 @@
       z-index: 99999;
     }
     .start-btn {
-      height: 26px;
+      height: 28px;
       padding: 0 10px;
       background: #c0c0c0;
       border-top: 2px solid #fff;
@@ -64,7 +163,7 @@
     }
     .task-badge {
       flex: 1;
-      height: 24px;
+      height: 26px;
       background: #c0c0c0;
       border-top: 1px solid #404040;
       border-left: 1px solid #404040;
@@ -80,8 +179,8 @@
       text-overflow: ellipsis;
     }
     .systray {
-      height: 24px;
-      padding: 0 8px;
+      height: 26px;
+      padding: 0 10px;
       border-top: 1px solid #808080;
       border-left: 1px solid #808080;
       border-right: 1px solid #fff;
@@ -91,35 +190,50 @@
       font-size: 12px;
       color: #000;
     }
-    /* Плашка автора вверху стола */
-    #branding-banner {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.75);
-      border: 1px solid #00ffff;
-      border-radius: 6px;
-      padding: 6px 14px;
-      color: #fff;
-      font-size: 12px;
-      text-align: center;
-      z-index: 1000;
-      pointer-events: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-    #branding-banner b {
-      color: #ffaa00;
-    }
-    #branding-banner span {
-      color: #00e5ff;
+
+    /* На мобильных смещаем окна Winamp чуть ниже баннера */
+    @media (max-width: 600px) {
+      #top-bar {
+        padding: 6px 12px;
+        top: 6px;
+      }
+      .top-title {
+        font-size: 11px;
+      }
+      .channel-link {
+        font-size: 11px;
+        padding: 3px 8px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div id="branding-banner">
-    ★ Создал <b>Дмитрий</b> специально для подписчиков <span>«Распаковка Двапаковка»</span> ★
+  <!-- Брендинг и официальные ссылки -->
+  <div id="top-bar">
+    <div class="top-title">
+      ★ Создал Дмитрий специально для подписчиков «РасПаковка ДваПаковка» ★
+    </div>
+    <div class="top-links">
+      <a class="channel-link yt-link" href="https://www.youtube.com/channel/UCZOINootuIq8tmgEY5Znj0g/videos" target="_blank" rel="noopener">
+        ▶ YouTube
+      </a>
+      <a class="channel-link vk-link" href="https://vk.cc/4BqC3B" target="_blank" rel="noopener">
+        vk ВКонтакте
+      </a>
+      <button class="channel-link skin-picker-btn" onclick="toggleSkinMenu()">
+        🎨 Скины Winamp
+      </button>
+    </div>
+  </div>
+
+  <!-- Меню выбора скинов -->
+  <div id="skin-menu">
+    <h4>Выберите скин:</h4>
+    <div class="skin-item" onclick="changeSkin('')">Classic Winamp 2.91 (Base)</div>
+    <div class="skin-item" onclick="changeSkin('skins/Matrix.wsz')">Matrix Edition (Green)</div>
+    <div class="skin-item" onclick="changeSkin('skins/Goldam.wsz')">Goldam (Gold Metallic)</div>
+    <div class="skin-item" onclick="changeSkin('skins/Ectoplasm.wsz')">Ectoplasm (Dark Sci-Fi)</div>
   </div>
 
   <div id="desktop">
@@ -127,17 +241,35 @@
   </div>
 
   <div id="taskbar">
-    <div class="start-btn" onclick="alert('Winamp v2.91\\nСоздал Дмитрий специально для подписчиков Распаковка Двапаковка!')">
+    <div class="start-btn" onclick="showAbout()">
       <span style="color:#000080;">⊞</span> Пуск
     </div>
     <div class="task-badge">
-      ⚡ Winamp - Создал Дмитрий [Распаковка Двапаковка]
+      ⚡ Winamp 2.91 - РасПаковка ДваПаковка (@DmitryUnboxing)
     </div>
     <div class="systray" id="clock">12:00</div>
   </div>
 
-  <script src="webamp.bundle.min.js"></script>
   <script>
+    // Блокируем назойливые системные alert окна от нереализованных фичей Webamp (Not supported in Webamp)
+    const _origAlert = window.alert;
+    window.alert = function(msg) {
+      if (typeof msg === 'string' && (msg.includes('Not supported') || msg.includes('Failed to download skin'))) {
+        console.warn('Suppressed internal Webamp alert:', msg);
+        return; // Мягко подавляем, чтобы не вылетало диалоговое окно
+      }
+      _origAlert(msg);
+    };
+
+    function showAbout() {
+      _origAlert("⚡ Winamp Classic Edition\nСоздал Дмитрий специально для подписчиков канала РасПаковка ДваПаковка (@DmitryUnboxing)!\n\nYouTube: https://www.youtube.com/channel/UCZOINootuIq8tmgEY5Znj0g/videos\nВК: https://vk.cc/4BqC3B");
+    }
+
+    function toggleSkinMenu() {
+      const menu = document.getElementById('skin-menu');
+      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    }
+
     // Часы на панели задач
     function updateClock() {
       const now = new Date();
@@ -147,29 +279,65 @@
     }
     setInterval(updateClock, 1000);
     updateClock();
+  </script>
 
-    // Инициализация полноценного Webamp (настоящий Windows Winamp)
+  <script src="webamp.bundle.min.js"></script>
+  <script>
+    let webampInstance = null;
+
+    function changeSkin(url) {
+      document.getElementById('skin-menu').style.display = 'none';
+      if (webampInstance) {
+        if (!url) {
+          // Возврат на базовый скин
+          webampInstance.store.dispatch({ type: "LOADED" });
+        } else {
+          webampInstance.setSkinFromUrl(url);
+        }
+      }
+    }
+
+    // Инициализация Webamp с треками Дмитрия и возможностью смены скинов
     const webamp = new Webamp({
       initialTracks: [
         {
           metaData: {
-            artist: "Дмитрий (Распаковка Двапаковка)",
-            title: "Winamp Retro Intro (Special Edition)"
+            artist: "Ruzer",
+            title: "ES VIP (Выбор Дмитрия - РасПаковка ДваПаковка)"
+          },
+          url: "music/ruzer_vip.mp3",
+          duration: 163
+        },
+        {
+          metaData: {
+            artist: "Дмитрий (РасПаковка ДваПаковка)",
+            title: "Winamp 2.91 Retro Intro"
           },
           url: "dmitry_intro.mp3",
           duration: 8
         }
       ],
+      availableSkins: [
+        { url: "skins/Matrix.wsz", name: "Matrix" },
+        { url: "skins/Goldam.wsz", name: "Goldam" },
+        { url: "skins/Ectoplasm.wsz", name: "Ectoplasm" }
+      ],
+      windowLayout: {
+        main: { position: { top: 90, left: Math.max(10, (window.innerWidth - 275) / 2) } },
+        equalizer: { position: { top: 206, left: Math.max(10, (window.innerWidth - 275) / 2) } },
+        playlist: { position: { top: 322, left: Math.max(10, (window.innerWidth - 275) / 2) } }
+      },
       zIndex: 10000
     });
 
+    webampInstance = webamp;
+
     webamp.renderWhenReady(document.getElementById('app')).then(() => {
-      console.log("Webamp готов к работе!");
-      
-      // Авто-запуск для воспроизведения авторского интро
+      console.log("Webamp успешно запущен!");
+      // Запуск трека
       setTimeout(() => {
         webamp.play();
-      }, 800);
+      }, 600);
     });
   </script>
 </body>
