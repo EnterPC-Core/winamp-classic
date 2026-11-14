@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
     }
-    html, body {
+    body, html {
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -20,28 +20,28 @@
       -webkit-user-select: none;
     }
 
-    /* Верхняя панель автора */
+    /* Верхняя плашка автора - компактная, не перекрывает плеер */
     #top-bar {
       position: absolute;
-      top: 8px;
+      top: 6px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(14, 18, 26, 0.95);
-      border: 1.5px solid #00f0ff;
-      border-radius: 8px;
-      padding: 6px 14px;
+      border: 1px solid #00f0ff;
+      border-radius: 6px;
+      padding: 4px 10px;
       color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
-      z-index: 100000;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+      gap: 3px;
+      z-index: 99999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
       width: max-content;
-      max-width: 96vw;
+      max-width: 95vw;
     }
     .top-title {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: bold;
       color: #ffd700;
       text-align: center;
@@ -49,7 +49,7 @@
     }
     .top-links {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
       justify-content: center;
     }
@@ -57,7 +57,7 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 4px;
       text-decoration: none;
       font-size: 11px;
@@ -79,18 +79,18 @@
       color: #00f0ff;
     }
 
-    /* Выпадающее меню скинов */
+    /* Меню скинов */
     #skin-menu {
       display: none;
       position: absolute;
-      top: 66px;
+      top: 55px;
       left: 50%;
       transform: translateX(-50%);
       background: #c0c0c0;
       border: 2px outset #ffffff;
       padding: 4px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-      z-index: 100001;
+      z-index: 100000;
       width: 280px;
       max-height: 60vh;
       overflow-y: auto;
@@ -114,7 +114,7 @@
     }
     .skin-item {
       padding: 6px 10px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 500;
       cursor: pointer;
       color: #000;
@@ -125,22 +125,7 @@
       color: #fff;
     }
 
-    /* Изолированная область стола: строго от низа плашки (68px) до панели задач (34px) */
-    #desktop-screen {
-      position: absolute;
-      top: 68px;
-      left: 0;
-      right: 0;
-      bottom: 34px;
-      overflow: hidden;
-    }
-
-    /* Четкость пикселей */
-    #webamp canvas, #webamp div {
-      image-rendering: pixelated !important;
-    }
-
-    /* Нижняя панель задач Windows */
+    /* Панель задач Windows */
     #taskbar {
       position: absolute;
       bottom: 0;
@@ -203,7 +188,7 @@
 </head>
 <body>
 
-  <!-- Верхняя плашка автора -->
+  <!-- Верхняя плашка -->
   <div id="top-bar">
     <div class="top-title">
       ★ Создал Дмитрий для «РасПаковка ДваПаковка» ★
@@ -216,12 +201,12 @@
         vk ВКонтакте
       </a>
       <button class="channel-link skin-picker-btn" onclick="toggleSkinMenu()">
-        🎨 Скины (9 шт.)
+        🎨 Скины
       </button>
     </div>
   </div>
 
-  <!-- Меню выбора скинов -->
+  <!-- Меню скинов -->
   <div id="skin-menu">
     <div id="skin-menu-header">
       <span>Выберите скин:</span>
@@ -238,8 +223,7 @@
     <div class="skin-item" onclick="changeSkin('skins/Girl_comma_Interrupted.wsz')">Movie Edition (Retro)</div>
   </div>
 
-  <!-- Изолированная область рабочего стола -->
-  <div id="desktop-screen"></div>
+  <div id="app"></div>
 
   <!-- Панель задач Windows -->
   <div id="taskbar">
@@ -325,14 +309,39 @@
         { url: "skins/Cyrus-XMMS.wsz", name: "Cyrus XMMS" },
         { url: "skins/Girl_comma_Interrupted.wsz", name: "Girl Interrupted" }
       ],
-      zIndex: 1000
+      zIndex: 10000
     });
 
     webampInstance = webamp;
 
-    // Монтируем Webamp строго внутрь изолированного desktop-screen через renderInto
-    webamp.renderInto(document.getElementById('desktop-screen')).then(() => {
-      console.log("Webamp отрендерен ровно внутри рабочего стола!");
+    webamp.renderWhenReady(document.getElementById('app')).then(() => {
+      console.log("Webamp готов!");
+
+      // Функция выравнивания: ровно по центру экрана и ОПУСКАЕМ ниже плашки
+      function setCleanLayout() {
+        const topBar = document.getElementById('top-bar');
+        const startY = topBar ? topBar.offsetHeight + 18 : 68; // опускаем ниже плашки
+        const screenW = window.innerWidth;
+        const centerX = Math.max(0, Math.floor((screenW - 275) / 2)); // ровно по центру экрана
+
+        // Устанавливаем координаты окон в штатном хранилище Webamp
+        webamp.store.dispatch({
+          type: "UPDATE_WINDOW_POSITIONS",
+          positions: {
+            main: { x: centerX, y: startY },
+            equalizer: { x: centerX, y: startY + 116 },
+            playlist: { x: centerX, y: startY + 232 }
+          },
+          absolute: true
+        });
+      }
+
+      setCleanLayout();
+      setTimeout(setCleanLayout, 100);
+      setTimeout(setCleanLayout, 300);
+
+      window.addEventListener('resize', setCleanLayout);
+
       setTimeout(() => {
         webamp.play();
       }, 500);
