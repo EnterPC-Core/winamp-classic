@@ -349,6 +349,16 @@
     webamp.renderWhenReady(document.getElementById('app')).then(() => {
       console.log("Webamp готов!");
 
+      // Перехватываем клик по кнопке "About" и перенаправляем на ваш YouTube
+      document.addEventListener('click', function(e) {
+        const aboutBtn = e.target.closest('#about');
+        if (aboutBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.open('https://www.youtube.com/channel/UCZOINootuIq8tmgEY5Znj0g/videos', '_blank');
+        }
+      }, true);
+
       // Центрирование окон строго по центру и ниже плашки
       function setCleanLayout() {
         const topBar = document.getElementById('top-bar');
