@@ -14,7 +14,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #008080; /* Классический рабочий стол Windows 98/2000 */
+      background: #008080; /* Классический фон Windows 98/2000 */
       font-family: "MS Sans Serif", Tahoma, -apple-system, sans-serif;
       user-select: none;
       -webkit-user-select: none;
@@ -24,154 +24,127 @@
       top: 0;
       left: 0;
       right: 0;
-      bottom: 38px;
+      bottom: 34px;
       overflow: hidden;
     }
 
-    /* Верхняя панель брендинга и официальных ссылок */
+    /* Компактная аккуратная панель приветствия */
     #top-bar {
       position: absolute;
-      top: 10px;
+      top: 6px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(16, 20, 28, 0.94);
-      border: 2px solid #00f0ff;
-      border-radius: 10px;
-      padding: 10px 18px;
+      background: rgba(14, 18, 26, 0.95);
+      border: 1px solid #00f0ff;
+      border-radius: 6px;
+      padding: 4px 10px;
       color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 4px;
       z-index: 100000;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-      backdrop-filter: blur(10px);
-      max-width: 96vw;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      width: max-content;
+      max-width: 95vw;
     }
     .top-title {
-      font-size: 14px;
+      font-size: 11px;
       font-weight: bold;
       color: #ffd700;
       text-align: center;
-      letter-spacing: 0.5px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .top-links {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
       justify-content: center;
     }
     .channel-link {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 6px;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
       text-decoration: none;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: bold;
       color: #fff;
-      transition: transform 0.1s, opacity 0.2s;
+      cursor: pointer;
     }
     .channel-link:active {
       transform: scale(0.95);
     }
     .yt-link {
-      background: linear-gradient(180deg, #ff1a1a, #cc0000);
+      background: #e62117;
       border: 1px solid #ff4d4d;
-      box-shadow: 0 2px 8px rgba(255, 0, 0, 0.4);
     }
     .vk-link {
-      background: linear-gradient(180deg, #0088ff, #0055cc);
+      background: #0077ff;
       border: 1px solid #3399ff;
-      box-shadow: 0 2px 8px rgba(0, 119, 255, 0.4);
     }
     .skin-picker-btn {
-      background: linear-gradient(180deg, #2a3246, #1a2030);
+      background: #232b3e;
       border: 1px solid #00f0ff;
       color: #00f0ff;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 240, 255, 0.3);
     }
 
-    /* Модальное окно выбора скинов (расположено СТРОГО НИЖЕ плашки) */
+    /* Выпадающее меню скинов */
     #skin-menu {
       display: none;
       position: absolute;
-      top: 105px; /* Строго под окном приветствия */
+      top: 62px;
       left: 50%;
       transform: translateX(-50%);
       background: #c0c0c0;
-      border: 3px outset #ffffff;
-      padding: 6px;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.8);
+      border: 2px outset #ffffff;
+      padding: 4px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.8);
       z-index: 100002;
-      width: 320px;
-      max-height: 70vh;
+      width: 280px;
+      max-height: 65vh;
       overflow-y: auto;
     }
     #skin-menu-header {
       background: #000080;
       color: #fff;
-      padding: 6px 10px;
-      font-size: 13px;
+      padding: 4px 8px;
+      font-size: 11px;
       font-weight: bold;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     #skin-menu-close {
       cursor: pointer;
       color: #ff4d4d;
       font-weight: bold;
-      font-size: 15px;
+      font-size: 14px;
     }
     .skin-item {
-      padding: 8px 12px;
-      font-size: 13px;
+      padding: 6px 10px;
+      font-size: 11px;
       font-weight: 500;
       cursor: pointer;
       color: #000;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       border-bottom: 1px solid #dfdfdf;
-      transition: background 0.1s;
     }
     .skin-item:hover, .skin-item:active {
       background: #000080;
       color: #fff;
     }
 
-    /* Масштабирование плеера (делаем крупнее для телефонов) */
-    #app-container {
-      position: absolute;
-      top: 95px; /* Начинается ниже окна приветствия */
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      overflow: auto;
-      padding-top: 10px;
-    }
-
-    /* Увеличиваем размер Winamp (масштаб 1.25x для комфортного тапа) */
-    #webamp {
-      transform: scale(1.22);
-      transform-origin: top center;
-    }
-
-    /* Нижняя панель задач */
+    /* Нижняя панель задач Windows */
     #taskbar {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 38px;
+      height: 34px;
       background: #c0c0c0;
       border-top: 2px solid #ffffff;
       display: flex;
@@ -181,18 +154,18 @@
       z-index: 99999;
     }
     .start-btn {
-      height: 30px;
-      padding: 0 12px;
+      height: 26px;
+      padding: 0 10px;
       background: #c0c0c0;
       border-top: 2px solid #fff;
       border-left: 2px solid #fff;
       border-right: 2px solid #404040;
       border-bottom: 2px solid #404040;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 12px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       cursor: pointer;
     }
     .start-btn:active {
@@ -203,7 +176,7 @@
     }
     .task-badge {
       flex: 1;
-      height: 28px;
+      height: 24px;
       background: #c0c0c0;
       border-top: 1px solid #404040;
       border-left: 1px solid #404040;
@@ -211,47 +184,33 @@
       border-bottom: 1px solid #fff;
       display: flex;
       align-items: center;
-      padding: 0 10px;
-      font-size: 13px;
+      padding: 0 8px;
+      font-size: 12px;
       color: #000;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .systray {
-      height: 28px;
-      padding: 0 10px;
+      height: 24px;
+      padding: 0 8px;
       border-top: 1px solid #808080;
       border-left: 1px solid #808080;
       border-right: 1px solid #fff;
       border-bottom: 1px solid #fff;
       display: flex;
       align-items: center;
-      font-size: 13px;
+      font-size: 12px;
       color: #000;
-    }
-
-    @media (max-width: 480px) {
-      .top-title {
-        font-size: 12px;
-      }
-      .channel-link {
-        font-size: 12px;
-        padding: 5px 10px;
-      }
-      #webamp {
-        transform: scale(1.15);
-        transform-origin: top center;
-      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Брендинг и официальные ссылки Дмитрия -->
+  <!-- Компактная плашка приветствия -->
   <div id="top-bar">
     <div class="top-title">
-      ★ Создал Дмитрий специально для подписчиков «РасПаковка ДваПаковка» ★
+      ★ Создал Дмитрий для «РасПаковка ДваПаковка» ★
     </div>
     <div class="top-links">
       <a class="channel-link yt-link" href="https://www.youtube.com/channel/UCZOINootuIq8tmgEY5Znj0g/videos" target="_blank" rel="noopener">
@@ -261,15 +220,15 @@
         vk ВКонтакте
       </a>
       <button class="channel-link skin-picker-btn" onclick="toggleSkinMenu()">
-        🎨 Скины (9 шт.)
+        🎨 Скины
       </button>
     </div>
   </div>
 
-  <!-- Меню выбора скинов (Строго под окном приветствия) -->
+  <!-- Меню выбора скинов -->
   <div id="skin-menu">
     <div id="skin-menu-header">
-      <span>Выберите скин Winamp:</span>
+      <span>Выберите скин:</span>
       <span id="skin-menu-close" onclick="toggleSkinMenu()">✕</span>
     </div>
     <div class="skin-item" onclick="changeSkin('')">Classic 2.91 (Original Default)</div>
@@ -284,9 +243,7 @@
   </div>
 
   <div id="desktop">
-    <div id="app-container">
-      <div id="app"></div>
-    </div>
+    <div id="app"></div>
   </div>
 
   <div id="taskbar">
@@ -300,7 +257,7 @@
   </div>
 
   <script>
-    // Подавляем системные всплывающие alert-окна от Webamp
+    // Подавляем системные alert-окна Webamp
     const _origAlert = window.alert;
     window.alert = function(msg) {
       if (typeof msg === 'string' && (msg.includes('Not supported') || msg.includes('Failed to download skin'))) {
@@ -319,7 +276,7 @@
       menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
 
-    // Часы на панели задач
+    // Часы
     function updateClock() {
       const now = new Date();
       document.getElementById('clock').textContent = 
@@ -345,7 +302,11 @@
       }
     }
 
-    // Инициализация Webamp
+    // Точный расчет координат: строго ниже компактной плашки (top: 62px)
+    const winWidth = window.innerWidth;
+    const startX = Math.max(10, Math.floor((winWidth - 275) / 2));
+    const startY = 62; // 62px строго ниже top-bar
+
     const webamp = new Webamp({
       initialTracks: [
         {
@@ -376,9 +337,9 @@
         { url: "skins/Girl_comma_Interrupted.wsz", name: "Girl Interrupted" }
       ],
       windowLayout: {
-        main: { position: { top: 15, left: 0 } },
-        equalizer: { position: { top: 131, left: 0 } },
-        playlist: { position: { top: 247, left: 0 } }
+        main: { position: { top: startY, left: startX } },
+        equalizer: { position: { top: startY + 116, left: startX } },
+        playlist: { position: { top: startY + 116 + 116, left: startX } }
       },
       zIndex: 10000
     });
@@ -389,7 +350,7 @@
       console.log("Webamp готов к работе!");
       setTimeout(() => {
         webamp.play();
-      }, 600);
+      }, 500);
     });
   </script>
 </body>
