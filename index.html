@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Winamp - РасПаковка ДваПаковка | Дмитрий</title>
   <style>
     * {
@@ -10,28 +10,23 @@
       margin: 0;
       padding: 0;
     }
-    body, html {
+    html, body {
       width: 100%;
       height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
-      background: #008080; /* Классический ретро-бирюзовый рабочий стол */
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "MS Sans Serif", Tahoma, sans-serif;
+      overflow: hidden;
+      background: #008080; /* Классический бирюзовый рабочий стол */
+      font-family: "MS Sans Serif", Tahoma, sans-serif;
       user-select: none;
       -webkit-user-select: none;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Верхняя фиксированная плашка: минималистичная, тонкая, аккуратная */
+    /* Верхняя панель автора */
     #top-bar {
-      position: fixed;
+      position: absolute;
       top: 8px;
       left: 50%;
       transform: translateX(-50%);
-      width: max-content;
-      max-width: 95vw;
-      background: rgba(12, 16, 24, 0.94);
+      background: rgba(14, 18, 26, 0.95);
       border: 1.5px solid #00f0ff;
       border-radius: 8px;
       padding: 6px 14px;
@@ -39,18 +34,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
-      z-index: 999999;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.7);
-      backdrop-filter: blur(12px);
+      gap: 5px;
+      z-index: 100000;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+      width: max-content;
+      max-width: 96vw;
     }
     .top-title {
       font-size: 12px;
-      font-weight: 700;
+      font-weight: bold;
       color: #ffd700;
       text-align: center;
-      letter-spacing: 0.3px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
       white-space: nowrap;
     }
     .top-links {
@@ -62,7 +56,7 @@
     .channel-link {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       padding: 3px 10px;
       border-radius: 4px;
       text-decoration: none;
@@ -70,47 +64,42 @@
       font-weight: bold;
       color: #fff;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      transition: transform 0.1s, opacity 0.2s;
-    }
-    .channel-link:active {
-      transform: scale(0.95);
     }
     .yt-link {
-      background: linear-gradient(180deg, #ff1a1a, #cc0000);
+      background: #e62117;
       border: 1px solid #ff4d4d;
     }
     .vk-link {
-      background: linear-gradient(180deg, #0088ff, #0055cc);
+      background: #0077ff;
       border: 1px solid #3399ff;
     }
     .skin-picker-btn {
-      background: linear-gradient(180deg, #2a3348, #181f2c);
+      background: #232b3e;
       border: 1px solid #00f0ff;
       color: #00f0ff;
     }
 
-    /* Модальное окно выбора скинов строго под верхней плашкой */
+    /* Выпадающее меню скинов */
     #skin-menu {
       display: none;
-      position: fixed;
-      top: 65px;
+      position: absolute;
+      top: 66px;
       left: 50%;
       transform: translateX(-50%);
       background: #c0c0c0;
       border: 2px outset #ffffff;
       padding: 4px;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.85);
-      z-index: 1000000;
-      width: 290px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+      z-index: 100001;
+      width: 280px;
       max-height: 60vh;
       overflow-y: auto;
     }
     #skin-menu-header {
       background: #000080;
       color: #fff;
-      padding: 5px 8px;
-      font-size: 12px;
+      padding: 4px 8px;
+      font-size: 11px;
       font-weight: bold;
       display: flex;
       justify-content: space-between;
@@ -124,7 +113,7 @@
       font-size: 14px;
     }
     .skin-item {
-      padding: 7px 10px;
+      padding: 6px 10px;
       font-size: 12px;
       font-weight: 500;
       cursor: pointer;
@@ -136,60 +125,38 @@
       color: #fff;
     }
 
-    /* Рабочий стол и контейнер плеера */
-    #desktop {
-      position: relative;
-      width: 100%;
-      min-height: calc(100vh - 38px);
-      padding-top: 80px; /* Гарантированный отступ ВНИЗ под плашку */
-      padding-bottom: 50px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+    /* Изолированная область стола: строго от низа плашки (68px) до панели задач (34px) */
+    #desktop-screen {
+      position: absolute;
+      top: 68px;
+      left: 0;
+      right: 0;
+      bottom: 34px;
+      overflow: hidden;
     }
 
-    /* Увеличение и 4K Ultra-Sharp пикселизация для Webamp */
-    #app {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      margin-top: 10px;
-    }
-
-    /* Масштаб 1.38x на мобильных и Ultra-HD рендеринг без размытия */
-    #webamp {
-      transform: scale(1.36);
-      transform-origin: top center;
-    }
-
-    /* Четкий 4K попиксельный рендеринг ретро-текстур */
-    #webamp canvas,
-    #webamp .window,
-    #webamp img,
-    #webamp div {
-      image-rendering: -webkit-optimize-contrast !important;
-      image-rendering: crisp-edges !important;
+    /* Четкость пикселей */
+    #webamp canvas, #webamp div {
       image-rendering: pixelated !important;
     }
 
     /* Нижняя панель задач Windows */
     #taskbar {
-      position: fixed;
+      position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 38px;
+      height: 34px;
       background: #c0c0c0;
       border-top: 2px solid #ffffff;
       display: flex;
       align-items: center;
       padding: 0 4px;
       gap: 6px;
-      z-index: 999998;
+      z-index: 99999;
     }
     .start-btn {
-      height: 28px;
+      height: 26px;
       padding: 0 10px;
       background: #c0c0c0;
       border-top: 2px solid #fff;
@@ -197,21 +164,15 @@
       border-right: 2px solid #404040;
       border-bottom: 2px solid #404040;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 12px;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       cursor: pointer;
-    }
-    .start-btn:active {
-      border-top: 2px solid #404040;
-      border-left: 2px solid #404040;
-      border-right: 2px solid #fff;
-      border-bottom: 2px solid #fff;
     }
     .task-badge {
       flex: 1;
-      height: 26px;
+      height: 24px;
       background: #c0c0c0;
       border-top: 1px solid #404040;
       border-left: 1px solid #404040;
@@ -227,7 +188,7 @@
       text-overflow: ellipsis;
     }
     .systray {
-      height: 26px;
+      height: 24px;
       padding: 0 8px;
       border-top: 1px solid #808080;
       border-left: 1px solid #808080;
@@ -238,21 +199,11 @@
       font-size: 12px;
       color: #000;
     }
-
-    @media (max-width: 480px) {
-      #desktop {
-        padding-top: 75px;
-      }
-      #webamp {
-        transform: scale(1.24);
-        transform-origin: top center;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <!-- Верхняя компактная плашка -->
+  <!-- Верхняя плашка автора -->
   <div id="top-bar">
     <div class="top-title">
       ★ Создал Дмитрий для «РасПаковка ДваПаковка» ★
@@ -273,7 +224,7 @@
   <!-- Меню выбора скинов -->
   <div id="skin-menu">
     <div id="skin-menu-header">
-      <span>Выберите скин Winamp:</span>
+      <span>Выберите скин:</span>
       <span id="skin-menu-close" onclick="toggleSkinMenu()">✕</span>
     </div>
     <div class="skin-item" onclick="changeSkin('')">Classic 2.91 (Original Default)</div>
@@ -287,22 +238,22 @@
     <div class="skin-item" onclick="changeSkin('skins/Girl_comma_Interrupted.wsz')">Movie Edition (Retro)</div>
   </div>
 
-  <div id="desktop">
-    <div id="app"></div>
-  </div>
+  <!-- Изолированная область рабочего стола -->
+  <div id="desktop-screen"></div>
 
+  <!-- Панель задач Windows -->
   <div id="taskbar">
     <div class="start-btn" onclick="showAbout()">
       <span style="color:#000080;">⊞</span> Пуск
     </div>
     <div class="task-badge">
-      ⚡ Winamp 2.91 Ultra-HD - РасПаковка ДваПаковка (@DmitryUnboxing)
+      ⚡ Winamp 2.91 - РасПаковка ДваПаковка (@DmitryUnboxing)
     </div>
     <div class="systray" id="clock">12:00</div>
   </div>
 
   <script>
-    // Подавляем системные alert окна от Webamp
+    // Подавляем системные alert-окна Webamp
     const _origAlert = window.alert;
     window.alert = function(msg) {
       if (typeof msg === 'string' && (msg.includes('Not supported') || msg.includes('Failed to download skin'))) {
@@ -312,7 +263,7 @@
     };
 
     function showAbout() {
-      _origAlert("⚡ Winamp Classic Ultra-HD Edition\nСоздал Дмитрий специально для подписчиков канала РасПаковка ДваПаковка (@DmitryUnboxing)!\n\nYouTube: https://www.youtube.com/channel/UCZOINootuIq8tmgEY5Znj0g/videos\nВК: https://vk.cc/4BqC3B");
+      _origAlert("⚡ Winamp Classic Edition\nСоздал Дмитрий специально для подписчиков канала РасПаковка ДваПаковка (@DmitryUnboxing)!\n\nYouTube: https://www.youtube.com/channel/UCZOINootuIq8tmgEY5Znj0g/videos\nВК: https://vk.cc/4BqC3B");
     }
 
     function toggleSkinMenu() {
@@ -345,7 +296,6 @@
       }
     }
 
-    // Инициализация Webamp в контейнере рабочего стола
     const webamp = new Webamp({
       initialTracks: [
         {
@@ -375,60 +325,14 @@
         { url: "skins/Cyrus-XMMS.wsz", name: "Cyrus XMMS" },
         { url: "skins/Girl_comma_Interrupted.wsz", name: "Girl Interrupted" }
       ],
-      zIndex: 10000
+      zIndex: 1000
     });
 
     webampInstance = webamp;
 
-    // Монтируем Webamp и принудительно выстраиваем окна СТРОГО НИЖЕ плашки
-    webamp.renderWhenReady(document.getElementById('app')).then(() => {
-      console.log("Webamp успешно отрендерен!");
-
-      function forceLayoutBelowBanner() {
-        const topBar = document.getElementById('top-bar');
-        const startY = (topBar ? topBar.offsetHeight + 18 : 75);
-        const screenW = window.innerWidth;
-        const startX = Math.max(0, Math.floor((screenW - 275 * 1.25) / 2));
-
-        // Вызываем Redux Action обновления координат
-        webamp.store.dispatch({
-          type: "UPDATE_WINDOW_POSITIONS",
-          positions: {
-            main: { x: startX, y: startY },
-            equalizer: { x: startX, y: startY + 116 },
-            playlist: { x: startX, y: startY + 116 + 116 }
-          },
-          absolute: true
-        });
-
-        // Прямой сдвиг DOM-элементов окон для гарантированного эффекта в браузере
-        const winMain = document.getElementById('main-window');
-        const winEq = document.getElementById('equalizer-window');
-        const winPl = document.getElementById('playlist-window');
-
-        if (winMain) {
-          winMain.style.top = startY + 'px';
-          winMain.style.left = startX + 'px';
-        }
-        if (winEq) {
-          winEq.style.top = (startY + 116) + 'px';
-          winEq.style.left = startX + 'px';
-        }
-        if (winPl) {
-          winPl.style.top = (startY + 232) + 'px';
-          winPl.style.left = startX + 'px';
-        }
-      }
-
-      // Несколько вызовов подряд для предотвращения сброса движком Webamp
-      forceLayoutBelowBanner();
-      setTimeout(forceLayoutBelowBanner, 80);
-      setTimeout(forceLayoutBelowBanner, 250);
-      setTimeout(forceLayoutBelowBanner, 600);
-
-      window.addEventListener('resize', forceLayoutBelowBanner);
-
-      // Авто-воспроизведение трека
+    // Монтируем Webamp строго внутрь изолированного desktop-screen через renderInto
+    webamp.renderInto(document.getElementById('desktop-screen')).then(() => {
+      console.log("Webamp отрендерен ровно внутри рабочего стола!");
       setTimeout(() => {
         webamp.play();
       }, 500);
